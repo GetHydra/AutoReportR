@@ -1,0 +1,133 @@
+Market Assessment: New York
+========================================================
+
+Evaluating local brand performance compared to both the Macro and Micro coffee markets.
+
+The Macro coffee markets include **Starbucks** and **Dunkin Brands**, the Micro markets are made up of all specialty coffee businesses.
+
+
+Daily Trends:
+
+```{r fig.width=12, fig.height=8,echo=FALSE}
+df=read.csv("Market_Temp.csv")
+##########################################################
+DOW=df$Weekday[1:30]
+DAT=as.Date(df$Date)[1:30]
+M=as.numeric(df$Full_Market)[1:30]
+S=as.numeric(df$Specialty_Market)[1:30]
+
+LOC=as.numeric(df[,5])[1:30]
+NM=names(df)[5]
+
+
+rng=range(c(M,S,LOC))
+
+plot(M,type="l",main=paste0(NM," Vs Macro Market"),xlab="",ylab="Scaled Ratio",ylim=rng,xaxt="n")
+axis(1, at=1:length(M),labels=DAT, las=2,cex.axis=.8)
+polygon(c(-100,-100,1000,1000,-100),c(-1000,1000,1000,-1000,-1000),border=FALSE,col="honeydew4")
+
+wknd=which(DOW=="Saturday" | DOW=="Sunday")
+
+for (i in 1:length(wknd))
+{
+px=c(wknd[i]-.4,wknd[i]-.4,wknd[i]+.4,wknd[i]+.4,wknd[i]-.4)
+py=c(-1000,1000,1000,-1000,-1000)
+polygon(px,py,col="plum4",border=FALSE)
+}
+
+lines(M,col="lightgrey",lwd=2)
+
+
+for (i in 1:length(LOC))
+{
+cols="green"
+if (M[i]-LOC[i] > 0){cols="blue"}
+lines(c(i,i),c(M[i],LOC[i]),lty=1,col=cols  )
+points(i,M[i],col=cols)
+}
+
+
+lines(LOC,col="cyan",lwd=3)
+
+#legend("topleft",pch=c(NA,NA,15),lty=c(1,1,NA),col=c("lightgrey","cyan","plum4"),
+#legend=c("Market",NM,"Weekend"),bty="n")
+
+legend("bottomright",lty=c(1,1),lwd=c(2,3),col=c("lightgrey","cyan"),
+legend=c("Market",NM),bty="n")
+
+```
+```{r fig.width=12, fig.height=8,echo=FALSE}
+dff=LOC-M
+dcol=rep("green",length(LOC))
+dcol[which(dff<0)]<-"blue"
+B=barplot(dff,main="",ylab="Scaled Ratio",names=DAT,las=2,col=dcol,border=FALSE,cex.names=.8)
+polygon(c(-100,-100,1000,1000,-100),c(-1000,1000,1000,-1000,-1000),border=FALSE,col="honeydew4")
+
+
+for (i in 1:length(wknd))
+{
+px=c(B[wknd[i]]-.5,B[wknd[i]]-.5,B[wknd[i]]+.5,B[wknd[i]]+.5,B[wknd[i]]-.5)
+py=c(-1000,1000,1000,-1000,-1000)
+polygon(px,py,col="plum4",border=FALSE)
+}
+
+barplot(dff,main="",ylab="",names="",col=dcol,border=FALSE,add=TRUE,las=2,yaxt="n")
+```
+```{r fig.width=12, fig.height=8,echo=FALSE}
+plot(S,type="l",main=paste0(NM," Vs Specialty Market"),xlab="",ylab="Scaled Ratio",ylim=rng,xaxt="n")
+axis(1, at=1:length(S),labels=DAT, las=2,cex.axis=.8)
+polygon(c(-100,-100,1000,1000,-100),c(-1000,1000,1000,-1000,-1000),border=FALSE,col="honeydew4")
+
+wknd=which(DOW=="Saturday" | DOW=="Sunday")
+
+for (i in 1:length(wknd))
+{
+px=c(wknd[i]-.4,wknd[i]-.4,wknd[i]+.4,wknd[i]+.4,wknd[i]-.4)
+py=c(-1000,1000,1000,-1000,-1000)
+polygon(px,py,col="plum4",border=FALSE)
+}
+
+lines(S,col="lightgrey",lwd=2)
+
+
+for (i in 1:length(LOC))
+{
+cols="green"
+if (S[i]-LOC[i] > 0){cols="blue"}
+lines(c(i,i),c(S[i],LOC[i]),lty=1,col=cols  )
+points(i,S[i],col=cols)
+}
+
+
+lines(LOC,col="cyan",lwd=3)
+
+#legend("topleft",pch=c(NA,NA,15),lty=c(1,1,NA),col=c("lightgrey","cyan","plum4"),
+#legend=c("Market",NM,"Weekend"),bty="n")
+
+legend("bottomright",lty=c(1,1),lwd=c(2,3),col=c("lightgrey","cyan"),
+legend=c("Market",NM),bty="n")
+
+```
+```{r fig.width=12, fig.height=8,echo=FALSE}
+dff=LOC-S
+dcol=rep("green",length(LOC))
+dcol[which(dff<0)]<-"blue"
+B=barplot(dff,main="",ylab="Scaled Ratio",names=DAT,las=2,col=dcol,border=FALSE,cex.names=.8)
+polygon(c(-100,-100,1000,1000,-100),c(-1000,1000,1000,-1000,-1000),border=FALSE,col="honeydew4")
+
+
+for (i in 1:length(wknd))
+{
+px=c(B[wknd[i]]-.5,B[wknd[i]]-.5,B[wknd[i]]+.5,B[wknd[i]]+.5,B[wknd[i]]-.5)
+py=c(-1000,1000,1000,-1000,-1000)
+polygon(px,py,col="plum4",border=FALSE)
+}
+
+barplot(dff,main="",ylab="",names="",col=dcol,border=FALSE,add=TRUE,las=2,yaxt="n")
+```
+
+
+
+```{r echo = FALSE,results = 'asis'}
+kable(df,caption = "Raw")
+```
